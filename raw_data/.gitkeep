@@ -1,0 +1,6 @@
+# Raw Data Directory
+
+This directory stores raw postal code data files downloaded from external sources.
+
+Note: Large data files are excluded from git tracking (see .gitignore).
+Download data using: npm run refresh 

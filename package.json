@@ -1,0 +1,77 @@
+{
+  "name": "postal-code-lookup-api",
+  "version": "1.0.0",
+  "description": "Fast postal code lookup API with data refresh capabilities",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "jest",
+    "test:comprehensive": "node scripts/comprehensive-test.js",
+    "test:performance": "node scripts/test-api-performance.js",
+    "lint": "eslint src/",
+    "lint:fix": "eslint src/ --fix",
+    "setup": "node src/scripts/setup-database.js",
+    "refresh": "npm run ingest",
+    "ingest": "node src/ingest-postal-codes.js",
+    "optimize": "node scripts/optimize-database.js",
+    "build": "npm run setup && npm run ingest",
+    "postinstall": "npm run setup",
+    "normalize": "node src/scripts/normalize-country-codes.js",
+    "clean": "npm run clean:logs && npm run clean:temp",
+    "clean:logs": "rm -rf logs/*.log",
+    "clean:temp": "rm -rf data/*_temp.duckdb data/*_backup.duckdb",
+    "backup": "cp data/postal_codes.duckdb data/postal_codes_backup_$(date +%Y%m%d_%H%M%S).duckdb",
+    "health": "curl -s http://localhost:3000/health || echo 'Server not running'",
+    "stats": "curl -s http://localhost:3000/stats | jq || curl -s http://localhost:3000/stats",
+    "status": "./scripts/project-status.sh",
+    "deploy:setup": "./scripts/deploy-setup.sh",
+    "deploy:build": "docker build -t postal-code-api .",
+    "deploy:up": "docker-compose up -d",
+    "deploy:down": "docker-compose down",
+    "deploy:logs": "docker-compose logs -f postal-api"
+  },
+  "keywords": [
+    "postal-code",
+    "geocoding",
+    "api",
+    "duckdb",
+    "express",
+    "geonames",
+    "node22",
+    "compression",
+    "optimization"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "dependencies": {
+    "adm-zip": "^0.5.16",
+    "compression": "^1.7.5",
+    "cors": "^2.8.5",
+    "csv-parser": "^3.0.0",
+    "duckdb-async": "^1.3.2",
+    "express": "^5.1.0",
+    "express-rate-limit": "^7.4.1",
+    "fast-levenshtein": "^3.0.0",
+    "fs-extra": "^11.2.0",
+    "helmet": "^8.0.0",
+    "JSONStream": "^1.3.5",
+    "winston": "^3.17.0",
+    "yauzl": "^3.2.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "eslint": "^9.17.0",
+    "jest": "^30.0.0",
+    "nodemon": "^3.1.7",
+    "supertest": "^7.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "your-repo-url"
+  }
+}

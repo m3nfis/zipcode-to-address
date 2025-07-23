@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: postal-code-api
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: LOG_LEVEL
+        value: info
+    disk:
+      name: postal-data
+      mountPath: /app/data
+      sizeGB: 1 

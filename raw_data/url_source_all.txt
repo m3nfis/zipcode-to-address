@@ -1,0 +1,2 @@
+geonames.org_all_countries -> https://download.geonames.org/export/zip/
+opendatasoft.com_allcountries -> https://data.opendatasoft.com/explore/dataset/geonames-postal-code%40public/export/

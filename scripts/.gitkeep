@@ -1,0 +1,6 @@
+# Shell Scripts Directory
+
+This directory contains shell scripts for data management and automation.
+
+Available scripts:
+- optimize-database.js - Database optimization (ANALYZE + VACUUM) 
