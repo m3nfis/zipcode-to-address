@@ -3,7 +3,7 @@ services:
     name: postal-code-api
     env: node
     plan: free
-    buildCommand: npm install
+    buildCommand: npm ci && npm run setup && npm run ingest
     startCommand: npm start
     healthCheckPath: /health
     envVars:
@@ -12,8 +12,4 @@ services:
       - key: PORT
         value: 3000
       - key: LOG_LEVEL
-        value: info
-    disk:
-      name: postal-data
-      mountPath: /app/data
-      sizeGB: 1 
+        value: info 
