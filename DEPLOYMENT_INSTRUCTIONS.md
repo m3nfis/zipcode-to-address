@@ -44,9 +44,13 @@ Render will automatically detect our `render.yaml` file with these settings:
 - **Start Command**: `npm start`
 - **Node Version**: 22+
 
+⚠️ **Free Tier Note**: Persistent disks are not supported on Render's free tier, so the database will be rebuilt on each deployment (takes 5-7 minutes).
+
 ### 3.4 Deploy
 1. Click **"Create Web Service"**
-2. Wait for deployment (5-10 minutes for first build + data ingestion)
+2. Wait for deployment:
+   - **Standard build**: 5-7 minutes (rebuilds database from scratch)
+   - **Fast build**: 30 seconds (if using pre-built database - see Option 2 below)
 3. Your API will be live at: `https://your-app-name.onrender.com`
 
 ## Step 4: Test Your Deployed API
@@ -64,6 +68,26 @@ https://your-app-name.onrender.com/
 https://your-app-name.onrender.com/lookup?country=US&postalCode=90210
 https://your-app-name.onrender.com/suggest?country=CA&partial=M5V
 ```
+
+## Alternative: Fast Deployment (Optional)
+
+For much faster deployments (30 seconds vs 5-7 minutes), you can upload your pre-built database and download it during deployment:
+
+### Option 2A: Upload to GitHub Releases
+1. Go to your GitHub repository
+2. Click **"Releases"** → **"Create a new release"**
+3. Tag: `v1.0.0`, Title: `Database v1.0.0`
+4. Upload your `data/postal_codes.duckdb` file (420MB)
+5. Publish release
+6. Update the `DATABASE_URL` in `scripts/download-prebuilt-db.js` with your release URL
+
+### Option 2B: Use Fast Build
+Update your render.yaml build command to:
+```yaml
+buildCommand: npm ci && npm run build-fast
+```
+
+This will try to download the pre-built database first, fall back to building if download fails.
 
 ## Important Notes
 
@@ -83,8 +107,22 @@ No additional environment variables needed - everything works out of the box!
 
 ## Troubleshooting
 
-If deployment fails:
-1. Check build logs in Render dashboard
-2. Ensure Node.js version is 22+
-3. Verify all files are committed to GitHub
-4. Contact support if data ingestion times out 
+### Common Issues:
+
+**"disks are not supported for free tier services"**
+- ✅ Fixed in latest version - we removed the disk configuration
+- The database now builds in ephemeral storage during deployment
+
+**Build timeout during data ingestion:**
+- Switch to Option 2 (fast deployment with pre-built database)
+- Or upgrade to Render's paid tier for longer build times
+
+**Database connection errors:**
+- Ensure Node.js version is 22+ in build logs
+- Check that all files are committed to GitHub
+- Verify the build completed successfully
+
+**App won't start:**
+- Check runtime logs in Render dashboard
+- Ensure PORT environment variable is set to 3000
+- Verify health check endpoint `/health` is responding 
