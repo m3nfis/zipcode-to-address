@@ -3,7 +3,7 @@ services:
     name: postal-code-api
     env: node
     plan: free
-    buildCommand: npm ci && npm run setup && npm run ingest
+    buildCommand: npm ci && npm run build-fast
     startCommand: npm start
     healthCheckPath: /health
     envVars:

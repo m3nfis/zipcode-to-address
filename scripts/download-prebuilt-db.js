@@ -10,7 +10,7 @@ const { spawn } = require('child_process');
  * This is much faster than rebuilding the database on each deployment
  */
 
-const DATABASE_URL = process.env.DATABASE_URL || 'https://github.com/YOUR_USERNAME/zipcode-to-address/releases/download/v1.0.0/postal_codes.duckdb.xz';
+const DATABASE_URL = process.env.DATABASE_URL || 'https://github.com/m3nfis/zipcode-to-address/releases/download/v1.0.0/postal_codes.duckdb.xz';
 const DATABASE_PATH = path.join(__dirname, '../data/postal_codes.duckdb');
 const COMPRESSED_PATH = DATABASE_PATH + '.xz';
 
