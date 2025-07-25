@@ -50,7 +50,7 @@ Render will automatically detect our `render.yaml` file with these settings:
 1. Click **"Create Web Service"**
 2. Wait for deployment:
    - **Standard build**: 5-7 minutes (rebuilds database from scratch)
-   - **Fast build**: 30 seconds (if using pre-built database - see Option 2 below)
+   - **Fast build**: 15-20 seconds (if using compressed pre-built database - see Option 2 below)
 3. Your API will be live at: `https://your-app-name.onrender.com`
 
 ## Step 4: Test Your Deployed API
@@ -71,14 +71,17 @@ https://your-app-name.onrender.com/suggest?country=CA&partial=M5V
 
 ## Alternative: Fast Deployment (Optional)
 
-For much faster deployments (30 seconds vs 5-7 minutes), you can upload your pre-built database and download it during deployment:
+For much faster deployments (15-20 seconds vs 5-7 minutes), you can upload your pre-built compressed database and download it during deployment:
 
-### Option 2A: Upload to GitHub Releases
-1. Go to your GitHub repository
-2. Click **"Releases"** → **"Create a new release"**
-3. Tag: `v1.0.0`, Title: `Database v1.0.0`
-4. Upload your `data/postal_codes.duckdb` file (420MB)
-5. Publish release
+### Option 2A: Upload Compressed Database to GitHub Releases
+1. **Compress your database** (reduces from 420MB to 77MB - 81% smaller!):
+   ```bash
+   xz -9 --extreme --keep data/postal_codes.duckdb
+   ```
+2. Go to your GitHub repository
+3. Click **"Releases"** → **"Create a new release"**
+4. Tag: `v1.0.0`, Title: `Database v1.0.0`
+5. Upload your `data/postal_codes.duckdb.xz` file (**77MB** instead of 420MB!)
 6. Update the `DATABASE_URL` in `scripts/download-prebuilt-db.js` with your release URL
 
 ### Option 2B: Use Fast Build
@@ -87,7 +90,13 @@ Update your render.yaml build command to:
 buildCommand: npm ci && npm run build-fast
 ```
 
-This will try to download the pre-built database first, fall back to building if download fails.
+This will try to download the compressed pre-built database first (77MB), decompress it (~4 seconds), fall back to building if download fails.
+
+**Time breakdown for fast deployment:**
+- Download 77MB: ~10 seconds
+- Decompress: ~4 seconds  
+- Start server: ~1-2 seconds
+- **Total: 15-20 seconds vs 5-7 minutes!**
 
 ## Important Notes
 

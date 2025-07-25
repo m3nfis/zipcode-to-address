@@ -19,10 +19,12 @@ config.env
 
 # Database files
 data/postal_codes.duckdb
+data/postal_codes.duckdb.xz
 data/postal_codes_backup.duckdb
 data/postal_codes_temp.duckdb
 data/*.duckdb
 data/*.duckdb-*
+data/*.duckdb.xz
 
 # Log files
 logs/
